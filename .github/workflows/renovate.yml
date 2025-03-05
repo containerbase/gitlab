@@ -18,7 +18,7 @@ jobs:
   gitlab:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/renovate/renovate:39.178.1@sha256:c9d54b7692f6006feab1951033c0501fd13a34cfd6f0b08d8337cc17a97bd99c
+      image: ghcr.io/renovatebot/renovate:39.178.1@sha256:c9d54b7692f6006feab1951033c0501fd13a34cfd6f0b08d8337cc17a97bd99c
       options: --tmpfs /tmp:exec
 
     steps:
