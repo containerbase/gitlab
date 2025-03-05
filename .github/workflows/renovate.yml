@@ -1,0 +1,82 @@
+name: renovate
+
+on:
+  push:
+  schedule:
+    #    - cron: '5 */6 * * *'
+    - cron: '*/30 * * * *'
+
+  workflow_dispatch:
+
+  
+env:
+  # RENOVATE_DRY_RUN: ${{ ((github.event_name != 'schedule' && github.event_name != 'workflow_dispatch') || (github.ref_name != 'main') && 'full' || '' }}
+  RENOVATE_DRY_RUN: ${{ ((github.event_name != 'schedule' && github.event_name != 'workflow_dispatch')) && 'full' || '' }} # dry-run on main to eleminate race condition
+  # RENOVATE_GIT_PRIVATE_KEY: ${{ secrets.GPG }}
+
+jobs:
+  gitlab:
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/renovate/renovate:39.178.1@sha256:c9d54b7692f6006feab1951033c0501fd13a34cfd6f0b08d8337cc17a97bd99c
+      options: --tmpfs /tmp:exec
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          show-progress: false
+
+      - name: print node heap
+        run: /usr/local/renovate/node -e 'console.log(`node heap limit = ${require("v8").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'
+
+      - name: Restore renovate repo cache
+        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+        with:
+          path: |
+            /tmp/renovate/cache/renovate/repository
+          key: repo-cache-${{ github.run_id }}
+          restore-keys: |
+            repo-cache-
+
+      - name: Restore renovate package cache
+        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+        with:
+          path: |
+            /tmp/renovate/cache/renovate/renovate-cache-sqlite
+          key: package-cache-${{ github.run_id }}
+          restore-keys: |
+            package-cache-
+
+      - name: Renovate
+        run: |
+          renovate
+        env:
+          GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: debug
+          RENOVATE_PLATFORM: gitlab
+          RENOVATE_REPOSITORY_CACHE: 'enabled'
+          RENOVATE_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          RENOVATE_GIT_AUTHOR: Renovate Bot <bot@renovateapp.com>
+
+          RENOVATE_X_SQLITE_PACKAGE_CACHE: true
+
+          GIT_AUTHOR_NAME: 'Renovate Bot'
+          GIT_AUTHOR_EMAIL: 'bot@renovateapp.com'
+          GIT_COMMITTER_NAME: 'Renovate Bot'
+          GIT_COMMITTER_EMAIL: 'bot@renovateapp.com'
+
+      - name: Save renovate repo cache
+        if: always() && env.RENOVATE_DRY_RUN != 'full'
+        uses: actions/cache/save@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+        with:
+          path: |
+            /tmp/renovate/cache/renovate/repository
+          key: repo-cache-${{ inputs.endpoint }}-${{ github.run_id }}
+
+      - name: Save renovate package cache
+        if: always() && env.RENOVATE_DRY_RUN != 'full'
+        uses: actions/cache/save@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+        with:
+          path: |
+            /tmp/renovate/cache/renovate/renovate-cache-sqlite
+          key: package-cache-${{ github.run_id }}

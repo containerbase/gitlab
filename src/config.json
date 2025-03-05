@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "logLevelRemap": [
+    { "matchMessage": "/^branch.isModified\\(\\) = /", "newLogLevel": "debug" }
+  ],
+  "repositories": ["renovate-bot/renovate-runner"],
+  "onboardingConfig": {
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended"]
+  },
+  "presetCachePersistence": true,
+  "osvVulnerabilityAlerts": true
+}
