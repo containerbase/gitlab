@@ -23,9 +23,6 @@ jobs:
         with:
           show-progress: false
 
-      - name: print node heap
-        run: /usr/local/renovate/node -e 'console.log(`node heap limit = ${require("v8").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'
-
       - name: Restore renovate repo cache
         uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
         with:
