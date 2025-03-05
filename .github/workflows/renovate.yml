@@ -46,7 +46,9 @@ jobs:
         with:
           token: ${{ secrets.GITLAB_TOKEN }}
           renovate-version: 39.178.1
-          docker-volumes: .:/conf
+          docker-volumes: |
+            /tmp:/tmp ;
+            ${{ github.workspace }}:/conf
         env:
           GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LOG_LEVEL: debug
@@ -63,7 +65,7 @@ jobs:
         with:
           path: |
             /tmp/renovate/cache/renovate/repository
-          key: repo-cache-${{ inputs.endpoint }}-${{ github.run_id }}
+          key: repo-cache-${{ github.run_id }}
 
       - name: Save renovate package cache
         if: always() && env.RENOVATE_DRY_RUN != 'full'
