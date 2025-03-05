@@ -41,21 +41,25 @@ jobs:
           restore-keys: |
             package-cache-
 
+      - name: Restore perms
+        run: |
+           [ -d /tmp/renovate ] && sudo chown -R 12021:0 /tmp/renovate/
+
       - name: Renovate
         uses: renovatebot/github-action@v41.0.13
         with:
           token: ${{ secrets.GITLAB_TOKEN }}
           renovate-version: 39.178.1
+          configurationFile: config.js
           docker-volumes: |
             /tmp:/tmp ;
-            ${{ github.workspace }}:/conf
+            ${{ github.workspace }}:/github-action
         env:
           GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LOG_LEVEL: debug
           RENOVATE_PLATFORM: gitlab
           RENOVATE_REPOSITORY_CACHE: 'enabled'
           RENOVATE_GIT_AUTHOR: Renovate Bot <bot@renovateapp.com>
-          RENOVATE_CONFIG_FILE: /conf/config.js
 
           RENOVATE_X_SQLITE_PACKAGE_CACHE: true
 
