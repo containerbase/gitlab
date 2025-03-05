@@ -25,5 +25,14 @@
       "matchDepNames": ["ghcr.io/renovate/renovate"],
       "extends": ["schedule:weekly"]
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/.+\\.yml$"],
+      "matchStrings": ["renovate-version: (?<currentValue>[^\\s]+)"],
+      "depNameTemplate": "ghcr.io/renovatebot/renovate",
+      "datasourceTemplate": "docker"
+    }
   ]
 }
