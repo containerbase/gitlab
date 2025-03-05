@@ -49,7 +49,7 @@ jobs:
           fi
 
       - name: Renovate
-        uses: renovatebot/github-action@v41.0.13
+        uses: renovatebot/github-action@e084b5ac6fd201023db6dd7743aec023babb02c8 # v41.0.13
         with:
           token: ${{ secrets.GITLAB_TOKEN }}
           renovate-version: 39.178.1
