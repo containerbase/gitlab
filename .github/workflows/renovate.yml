@@ -43,7 +43,10 @@ jobs:
 
       - name: Restore perms
         run: |
-           [ -d /tmp/renovate ] && sudo chown -R 12021:0 /tmp/renovate/
+          if [ -d /tmp/renovate ]; then
+            echo "fixing renovate perms"
+            sudo chown -R 12021:0 /tmp/renovate/
+          fi
 
       - name: Renovate
         uses: renovatebot/github-action@v41.0.13
