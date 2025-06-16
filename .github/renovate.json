@@ -1,36 +1,56 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["renovatebot/.github"],
+  "extends": [
+    "renovatebot/.github"
+  ],
   "automergeStrategy": "squash",
   "packageRules": [
     {
       "description": "Don't require approval for renovate updates",
-      "matchDepNames": ["ghcr.io/renovate/renovate"],
+      "matchDepNames": [
+        "ghcr.io/renovate/renovate"
+      ],
       "dependencyDashboardApproval": false
     },
     {
       "description": "use fix scope for renovate updates",
-      "matchPackageNames": ["ghcr.io/renovate/renovate"],
+      "matchPackageNames": [
+        "ghcr.io/renovate/renovate"
+      ],
       "groupName": "renovate",
       "semanticCommitType": "fix"
     },
     {
       "description": "Automerge renovate updates",
-      "matchPackageNames": ["ghcr.io/renovate/renovate"],
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchPackageNames": [
+        "ghcr.io/renovate/renovate"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
       "automerge": true
     },
     {
       "description": "Update renovate only weekly",
-      "matchDepNames": ["ghcr.io/renovate/renovate"],
-      "extends": ["schedule:weekly"]
+      "matchDepNames": [
+        "ghcr.io/renovate/renovate"
+      ],
+      "extends": [
+        "schedule:weekly"
+      ]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^\\.github/workflows/.+\\.yml$"],
-      "matchStrings": ["renovate-version: (?<currentValue>[^\\s]+)"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.+\\.yml$/"
+      ],
+      "matchStrings": [
+        "renovate-version: (?<currentValue>[^\\s]+)"
+      ],
       "depNameTemplate": "ghcr.io/renovatebot/renovate",
       "datasourceTemplate": "docker"
     }
