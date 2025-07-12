@@ -29,7 +29,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^\\.github/workflows/.+\\.yml$"],
+      "managerFilePatterns": ["^\\.github/workflows/.+\\.yml$"],
       "matchStrings": ["renovate-version: (?<currentValue>[^\\s]+)"],
       "depNameTemplate": "ghcr.io/renovatebot/renovate",
       "datasourceTemplate": "docker"
